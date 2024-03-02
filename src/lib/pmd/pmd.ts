@@ -1,50 +1,53 @@
-class DungeonTreeNode {
+export class DungeonTreeNode<T> {
 	constructor(
-		public readonly parent: DungeonTreeNode | null,
-		public readonly children: DungeonTreeNode[],
-		public isLeaf: boolean,
-		public isRoom: boolean,
-		public roomData: any, // replace with the data structure you need for your room
-		public split: 'horizontal' | 'vertical' | null
+		/**
+		 * parent is the node that this node was split from.
+		 */
+		public readonly parent: DungeonTreeNode<T> | null,
+
+		/**
+		 * children are the two nodes that this node is split into.
+		 */
+		public readonly children: DungeonTreeNode<T>[],
+
+		/**
+		 * roomData is the data that this node holds.
+		 */
+		public roomData: T
+
+		// public isLeaf: boolean,
+		// public isRoom: boolean,
+		// public roomData: T, // replace with the data structure you need for your room
+		// public split: 'horizontal' | 'vertical' | null
 	) {}
 }
 
-class DungeonTree {
-	public root: DungeonTreeNode | null = null;
-	public leaves: DungeonTreeNode[] = [];
+/**
+ * Balanced binary tree for dungeon generation.
+ *
+ * @see
+ * https://www.roguebasin.com/index.php/Basic_BSP_Dungeon_generation
+ */
+export class DungeonTree<T> {
+	public root: DungeonTreeNode<T> | null = null;
+	public leaves: DungeonTreeNode<T>[] = [];
 
 	public addNode(
-		parent: DungeonTreeNode | null,
+		parent: DungeonTreeNode<T> | null,
 		isLeaf: boolean,
-		isRoom: boolean,
-		roomData: any, // replace with the data structure you need for your room
-		split: 'horizontal' | 'vertical' | null
-	): DungeonTreeNode {
-		const newNode = new DungeonTreeNode(parent, [], isLeaf, isRoom, roomData, split);
+		roomData: T // replace with the data structure you need for your room
+	): DungeonTreeNode<T> {
+		const newNode = new DungeonTreeNode(parent, [], roomData);
 		if (parent) {
 			parent.children.push(newNode);
 		} else {
 			this.root = newNode;
 		}
+
 		if (isLeaf) {
 			this.leaves.push(newNode);
 		}
+
 		return newNode;
 	}
 }
-
-// Usage example
-const tree = new DungeonTree();
-const rootNode = tree.addNode(null, false, false, null, null);
-const leftNode = tree.addNode(rootNode, true, true, { size: 10, location: [10, 10] }, 'horizontal');
-const rightNode = tree.addNode(
-	rootNode,
-	true,
-	true,
-	{ size: 15, location: [20, 10] },
-	'horizontal'
-);
-
-console.log(tree);
-
-// https://www.youtube.com/watch?v=S5y3ES4Rvkk
