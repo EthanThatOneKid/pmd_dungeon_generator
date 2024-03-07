@@ -25,7 +25,7 @@ export interface DungeonTree<T> {
 	/**
 	 * root is the root node of the tree.
 	 */
-	root: DungeonTreeNode<T> | null;
+	root: DungeonTreeNode<T>;
 
 	/**
 	 * leaves are the leaf nodes of the tree.
@@ -61,7 +61,10 @@ export function eachLeaf<T>(tree: DungeonTree<T>, fn: (node: DungeonTreeNode<T>)
 /**
  * walkTree walks the tree and calls fn on each node.
  */
-export function walkTree<T>(node: DungeonTreeNode<T>, fn: (node: DungeonTreeNode<T>) => void): void {
+export function walkTree<T>(
+	node: DungeonTreeNode<T>,
+	fn: (node: DungeonTreeNode<T>) => void
+): void {
 	fn(node);
 	for (const child of node.children) {
 		walkTree(child, fn);
