@@ -41,9 +41,7 @@
 		>
 	</li>
 	<li>
-		<a href="https://www.youtube.com/watch?v=S5y3ES4Rvkk"
-			>YouTube: Binary Space Partitioning (BSP) Dungeon Generation</a
-		>
+		<a href="https://www.youtube.com/watch?v=S5y3ES4Rvkk">YouTube: Binary Tree</a>
 	</li>
 </ul>
 
