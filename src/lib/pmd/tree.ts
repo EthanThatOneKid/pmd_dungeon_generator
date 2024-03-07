@@ -57,3 +57,13 @@ export function eachLeaf<T>(tree: DungeonTree<T>, fn: (node: DungeonTreeNode<T>)
 
 	return seen;
 }
+
+/**
+ * walkTree walks the tree and calls fn on each node.
+ */
+export function walkTree<T>(node: DungeonTreeNode<T>, fn: (node: DungeonTreeNode<T>) => void): void {
+	fn(node);
+	for (const child of node.children) {
+		walkTree(child, fn);
+	}
+}

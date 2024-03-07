@@ -32,9 +32,9 @@ export function generateDungeon(options: PMDDungeonOptions): PMDDungeon {
 	tree.leaves.push(tree.root!);
 
 	// While there are leaves to split, split them.
-	// eslint-disable-next-line no-constant-condition
-	while (true) {
-		const hasLeaves = eachLeaf(tree, (node) => {
+	let hasLeaves = true;
+	while (hasLeaves) {
+		hasLeaves = eachLeaf(tree, (node) => {
 			if (!maySplit(node.data, options.minNodeSideLength)) {
 				return;
 			}
@@ -42,15 +42,26 @@ export function generateDungeon(options: PMDDungeonOptions): PMDDungeon {
 			// Split the node.
 			split(node);
 		});
-		if (!hasLeaves) {
-			break;
-		}
 	}
 
 	// Create a room with random size in each leaf of the tree.
 	eachLeaf(tree, (node) => {
 		node.data.room = generateRoom(node.data, options.roomMarginSize, options.minRoomSideLength);
 	});
+
+	// Create corridors between rooms.
+	// const stack = [...tree.leaves];
+	// while (stack.length > 0) {
+	// 	// Connect node with sibling if connection nonexistent.
+	// 	const node = stack.pop()!;
+	// 	if (node.data.corridor || !node.parent) {
+	// 		continue;
+	// 	}
+
+	// 	connect(node.parent);
+
+	// 	// Push parent to stack.
+	// }
 
 	return tree;
 }
@@ -79,6 +90,7 @@ export interface PMDDungeonNodeData {
 	height: number;
 	split?: PMDDungeonNodeSplit;
 	room?: PMDDungeonNodeRoom;
+	corridor?: PMDDungeonNodeRoom;
 }
 
 /**
@@ -146,6 +158,22 @@ function split(node: DungeonTreeNode<PMDDungeonNodeData>): void {
 	};
 	node.children.push(child1);
 }
+
+// function leafsOf(node: DungeonTreeNode<PMDDungeonNodeData>): DungeonTreeNode<PMDDungeonNodeData>[] {
+// 	const leafs: DungeonTreeNode<PMDDungeonNodeData>[] = [];
+// 	if (node.children.length === 0) {
+// 		leafs.push(node);
+// 	} else {
+// 		for (const child of node.children) {
+// 			leafs.push(...leafsOf(child));
+// 		}
+// 	}
+
+// 	return leafs;
+// }
+
+// function connect(node: DungeonTreeNode<PMDDungeonNodeData>): void {
+// }
 
 function generateRoom(
 	node: PMDDungeonNodeData,
