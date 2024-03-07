@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Corner from '$lib/components/corner.svelte';
 	import Pmd from '$lib/components/pmd.svelte';
 </script>
 
@@ -21,6 +22,8 @@
 		href="https://ethanthatonekid.github.io/dropin-minimal-css/min/w3c-chocolate.min.css"
 	/>
 </svelte:head>
+
+<Corner />
 
 <h1>Binary space partitioning</h1>
 
