@@ -4,6 +4,7 @@
 
 <svelte:head>
 	<title>Binary space partitioning</title>
+	<link rel="icon" type="image/svg+xml" href="/demo.svg" />
 	<meta property="og:title" content="Binary space partitioning" />
 	<meta property="og:type" content="website" />
 	<meta
