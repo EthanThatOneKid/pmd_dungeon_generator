@@ -28,8 +28,8 @@ You can preview the production build with `npm run preview`.
 - Demo: <https://pmd-dungeon.netlify.app/>
 - Workshop: <https://acmcsuf.com/pmd-generator>
 - Wikipedia: <https://en.wikipedia.org/wiki/Binary_space_partitioning>
-  RoguelikeBasin: <https://www.roguebasin.com/index.php?title=Basic_BSP_Dungeon_generation>
-  YouTube: <https://www.youtube.com/watch?v=S5y3ES4Rvkk>
+- RoguelikeBasin: <https://www.roguebasin.com/index.php?title=Basic_BSP_Dungeon_generation>
+- YouTube: <https://www.youtube.com/watch?v=S5y3ES4Rvkk>
 
 ---
 
