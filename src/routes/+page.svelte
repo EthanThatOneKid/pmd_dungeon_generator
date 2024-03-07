@@ -2,6 +2,16 @@
 	import Pmd from '$lib/components/pmd.svelte';
 </script>
 
+<svelte:head>
+	<title>Binary space partitioning</title>
+	<meta
+		name="description"
+		content="Visual representation of a binary space partitioning (BSP) tree"
+	/>
+	<meta name="og:image" content="/demo.svg" />
+	<meta name="og:url" content="https://github.com/ethanthatonekid/pmd_dungeon_generator#" />
+</svelte:head>
+
 <h1>Binary space partitioning</h1>
 
 <h2>Description</h2>
