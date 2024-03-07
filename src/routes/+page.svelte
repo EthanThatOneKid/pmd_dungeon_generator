@@ -8,10 +8,7 @@
 	<link rel="icon" type="image/svg+xml" href="/demo.svg" />
 	<meta property="og:title" content="Binary space partitioning" />
 	<meta property="og:type" content="website" />
-	<meta
-		name="og:description"
-		content="Visual representation of a binary space partitioning (BSP) tree"
-	/>
+	<meta name="og:description" content="Pokémon Mystery Dungeon dungeon generator." />
 	<meta
 		name="og:image"
 		content="https://github.com/EthanThatOneKid/pmd_dungeon_generator/raw/main/static/demo.svg"
@@ -35,7 +32,7 @@
 	data structure known as a BSP tree. See the <a
 		href="https://github.com/EthanThatOneKid/pmd_dungeon_generator/blob/main/src/lib/pmd/pmd.ts"
 		>TypeScript implementation</a
-	> of the algorithm.
+	> of the Pokémon Mystery Dungeon dungeon generator algorithm.
 </p>
 
 <h2>References</h2>
