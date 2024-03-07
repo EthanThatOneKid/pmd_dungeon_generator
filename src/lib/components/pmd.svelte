@@ -18,11 +18,7 @@
 	randomize();
 </script>
 
-<svg
-	viewBox="0 0 {dungeon.root?.data.width} {dungeon.root?.data.height}"
-	width="100%"
-	height="100%"
->
+<svg viewBox="0 0 {dungeon.root?.data.width} {dungeon.root?.data.height}" width="25%">
 	{#each dungeon.leaves as leaf}
 		<rect
 			x={leaf.data.x}
@@ -44,6 +40,8 @@
 		{/if}
 	{/each}
 </svg>
+
+<br />
 
 <button on:click={() => randomize()}>Randomize</button>
 
