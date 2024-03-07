@@ -1,15 +1,17 @@
 <script lang="ts">
 	import type { PMDDungeon } from '$lib/pmd';
-	import { generatePMDDungeon } from '$lib/pmd';
+	import { generateDungeon } from '$lib/pmd';
 	import { stringify } from '$lib/json_circular';
 
 	let dungeon: PMDDungeon; // Type of the return value of the
 
 	function randomize() {
-		dungeon = generatePMDDungeon({
+		dungeon = generateDungeon({
 			width: 100,
 			height: 100,
-			minRoomSideLength: 20
+			minNodeSideLength: 20,
+			roomMarginSize: 2,
+			minRoomSideLength: 10
 		});
 	}
 
@@ -21,15 +23,25 @@
 	width="100%"
 	height="100%"
 >
-	{#each dungeon.leaves as room}
+	{#each dungeon.leaves as leaf}
 		<rect
-			x={room.data.x}
-			y={room.data.y}
-			width={room.data.width}
-			height={room.data.height}
+			x={leaf.data.x}
+			y={leaf.data.y}
+			width={leaf.data.width}
+			height={leaf.data.height}
 			fill="none"
 			stroke="black"
 		/>
+		{#if leaf.data.room !== undefined}
+			<rect
+				x={leaf.data.room.x}
+				y={leaf.data.room.y}
+				width={leaf.data.room.width}
+				height={leaf.data.room.height}
+				fill="black"
+				stroke="red"
+			/>
+		{/if}
 	{/each}
 </svg>
 

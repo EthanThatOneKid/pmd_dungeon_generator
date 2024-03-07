@@ -7,6 +7,8 @@ import { eachLeaf } from './tree';
 export interface PMDDungeonOptions {
 	width: number;
 	height: number;
+	minNodeSideLength: number;
+	roomMarginSize: number;
 	minRoomSideLength: number;
 }
 
@@ -16,9 +18,9 @@ export interface PMDDungeonOptions {
 export type PMDDungeon = DungeonTree<PMDDungeonNodeData>;
 
 /**
- * generatePMDDungeon generates a PMD dungeon.
+ * generateDungeon generates a PMD dungeon.
  */
-export function generatePMDDungeon(options: PMDDungeonOptions): PMDDungeon {
+export function generateDungeon(options: PMDDungeonOptions): PMDDungeon {
 	const tree: PMDDungeon = {
 		root: {
 			parent: null,
@@ -33,7 +35,7 @@ export function generatePMDDungeon(options: PMDDungeonOptions): PMDDungeon {
 	// eslint-disable-next-line no-constant-condition
 	while (true) {
 		const hasLeaves = eachLeaf(tree, (node) => {
-			if (!maySplit(node.data, options.minRoomSideLength)) {
+			if (!maySplit(node.data, options.minNodeSideLength)) {
 				return;
 			}
 
@@ -44,6 +46,11 @@ export function generatePMDDungeon(options: PMDDungeonOptions): PMDDungeon {
 			break;
 		}
 	}
+
+	// Create a room with random size in each leaf of the tree.
+	eachLeaf(tree, (node) => {
+		node.data.room = generateRoom(node.data, options.roomMarginSize, options.minRoomSideLength);
+	});
 
 	return tree;
 }
@@ -58,12 +65,20 @@ export interface PMDDungeonNodeSplit {
 	ratio: number;
 }
 
+export interface PMDDungeonNodeRoom {
+	x: number;
+	y: number;
+	width: number;
+	height: number;
+}
+
 export interface PMDDungeonNodeData {
 	x: number;
 	y: number;
 	width: number;
 	height: number;
 	split?: PMDDungeonNodeSplit;
+	room?: PMDDungeonNodeRoom;
 }
 
 /**
@@ -130,4 +145,22 @@ function split(node: DungeonTreeNode<PMDDungeonNodeData>): void {
 		}
 	};
 	node.children.push(child1);
+}
+
+function generateRoom(
+	node: PMDDungeonNodeData,
+	roomMarginSize: number,
+	minRoomSideLength: number
+): PMDDungeonNodeRoom {
+	const width =
+		Math.random() * (node.width - roomMarginSize * 2 - minRoomSideLength) + minRoomSideLength;
+	const height =
+		Math.random() * (node.height - roomMarginSize * 2 - minRoomSideLength) + minRoomSideLength;
+
+	return {
+		x: node.x + roomMarginSize + Math.random() * (node.width - roomMarginSize * 2 - width),
+		y: node.y + roomMarginSize + Math.random() * (node.height - roomMarginSize * 2 - height),
+		width,
+		height
+	};
 }
