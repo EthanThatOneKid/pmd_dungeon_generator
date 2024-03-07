@@ -9,7 +9,7 @@
 	<meta property="og:title" content="Binary space partitioning" />
 	<meta property="og:type" content="website" />
 	<meta
-		name="description"
+		name="og:description"
 		content="Visual representation of a binary space partitioning (BSP) tree"
 	/>
 	<meta
