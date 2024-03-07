@@ -4,14 +4,14 @@
 
 <svelte:head>
 	<title>Binary space partitioning</title>
-	<link rel="icon" type="image/svg+xml" href="/demo.svg" />
 	<meta property="og:title" content="Binary space partitioning" />
 	<meta property="og:type" content="website" />
 	<meta
 		name="description"
 		content="Visual representation of a binary space partitioning (BSP) tree"
 	/>
-	<meta name="og:image" content="/demo.svg" />
+	<meta name="og:image" content="https://github.com/EthanThatOneKid/pmd_dungeon_generator/raw/main/static/demo.svg" />
+	<link rel="stylesheet" type="text/css" href="https://ethanthatonekid.github.io/dropin-minimal-css/min/w3c-chocolate.min.css">
 </svelte:head>
 
 <h1>Binary space partitioning</h1>
