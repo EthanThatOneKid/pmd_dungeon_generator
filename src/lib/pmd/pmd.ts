@@ -1,5 +1,5 @@
 import type { DungeonTree, DungeonTreeNode } from './tree';
-import { eachLeaf } from './tree';
+import { eachLeaf, walkTree } from './tree';
 
 /**
  * PMDDungeonOptions are options for generating a PMD dungeon.
@@ -29,12 +29,12 @@ export function generateDungeon(options: PMDDungeonOptions): PMDDungeon {
 		},
 		leaves: []
 	};
-	tree.leaves.push(tree.root!);
+	tree.leaves.push(tree.root);
 
 	// While there are leaves to split, split them.
-	// eslint-disable-next-line no-constant-condition
-	while (true) {
-		const hasLeaves = eachLeaf(tree, (node) => {
+	let hasLeaves = true;
+	while (hasLeaves) {
+		hasLeaves = eachLeaf(tree, (node) => {
 			if (!maySplit(node.data, options.minNodeSideLength)) {
 				return;
 			}
@@ -42,14 +42,20 @@ export function generateDungeon(options: PMDDungeonOptions): PMDDungeon {
 			// Split the node.
 			split(node);
 		});
-		if (!hasLeaves) {
-			break;
-		}
 	}
 
 	// Create a room with random size in each leaf of the tree.
 	eachLeaf(tree, (node) => {
 		node.data.room = generateRoom(node.data, options.roomMarginSize, options.minRoomSideLength);
+	});
+
+	// Create corridors between rooms.
+	walkTree(tree.root, (node) => {
+		// Create corridor between children.
+		const corridor = generateCorridor(node, 2);
+		if (corridor) {
+			node.data.corridor = corridor;
+		}
 	});
 
 	return tree;
@@ -79,6 +85,7 @@ export interface PMDDungeonNodeData {
 	height: number;
 	split?: PMDDungeonNodeSplit;
 	room?: PMDDungeonNodeRoom;
+	corridor?: PMDDungeonNodeRoom;
 }
 
 /**
@@ -163,4 +170,90 @@ function generateRoom(
 		width,
 		height
 	};
+}
+
+function generateCorridor(
+	node: DungeonTreeNode<PMDDungeonNodeData>,
+	corridorSize: number
+): PMDDungeonNodeRoom | undefined {
+	const child0 = node.children[0];
+	const child1 = node.children[1];
+	if (child0 === undefined || child1 === undefined) {
+		return;
+	}
+
+	const leaves0 = leavesOf(child0);
+	const leaves1 = leavesOf(child1);
+	const [room0, room1] = findClosestRooms(leaves0, leaves1);
+
+	// Create a new room that connects the two rooms.
+	const corridorX = room0.x + room0.height;
+	const corridorY = Math.random() * (room0.y + room0.height - corridorSize - room1.y) + room1.y;
+	return {
+		x: corridorX,
+		y: corridorY,
+		width: room1.x - corridorX,
+		height: corridorSize
+	};
+}
+
+function findClosestRooms(
+	leaves0: DungeonTreeNode<PMDDungeonNodeData>[],
+	leaves1: DungeonTreeNode<PMDDungeonNodeData>[]
+): [PMDDungeonNodeRoom, PMDDungeonNodeRoom] {
+	let minDistance = Infinity;
+	let room0: PMDDungeonNodeRoom | undefined;
+	let room1: PMDDungeonNodeRoom | undefined;
+	for (const leaf0 of leaves0) {
+		for (const leaf1 of leaves1) {
+			if (leaf0.data.room === undefined || leaf1.data.room === undefined) {
+				continue;
+			}
+
+			if (
+				leaf0.data.room.y + leaf0.data.room.height < leaf1.data.room.y ||
+				leaf0.data.room.y > leaf1.data.room.y + leaf1.data.room.height ||
+				leaf0.data.room.x + leaf0.data.room.width > leaf1.data.room.x
+			) {
+				continue;
+			}
+
+			const distanceX = Math.min(
+				Math.abs(leaf1.data.room.x - leaf0.data.room.x + leaf0.data.room.width),
+				Math.abs(leaf0.data.room.x - leaf1.data.room.x + leaf1.data.room.width)
+			);
+			const distanceY = Math.min(
+				Math.abs(leaf1.data.room.y - leaf0.data.room.y + leaf0.data.room.height),
+				Math.abs(leaf0.data.room.y - leaf1.data.room.y + leaf1.data.room.height)
+			);
+
+			const distance = Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
+			if (distance < minDistance) {
+				minDistance = distance;
+				room0 = leaf0.data.room;
+				room1 = leaf1.data.room;
+			}
+		}
+	}
+
+	if (room0 === undefined || room1 === undefined) {
+		throw new Error('no rooms found');
+	}
+
+	return [room0, room1];
+}
+
+function leavesOf(
+	node: DungeonTreeNode<PMDDungeonNodeData>
+): DungeonTreeNode<PMDDungeonNodeData>[] {
+	const leaves: DungeonTreeNode<PMDDungeonNodeData>[] = [];
+	if (node.children.length === 0) {
+		leaves.push(node);
+	} else {
+		for (const child of node.children) {
+			leaves.push(...leavesOf(child));
+		}
+	}
+
+	return leaves;
 }
